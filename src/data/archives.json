@@ -1,0 +1,503 @@
+[
+  {
+    "name": "Caden",
+    "authorId": "530873281209696258",
+    "categoryId": "1256429417077407804",
+    "forumChannelId": "1256435268060319764",
+    "workingNotesChannelId": "1256430900724498493",
+    "channels": [
+      {
+        "id": "1256430024664420545",
+        "name": "command-projects"
+      },
+      {
+        "id": "1256430177303658546",
+        "name": "item-projects"
+      },
+      {
+        "id": "1256430855237402654",
+        "name": "music-assets"
+      },
+      {
+        "id": "1256430738123919402",
+        "name": "script-api-projects"
+      },
+      {
+        "id": "1256429665405370408",
+        "name": "blog"
+      },
+      {
+        "id": "1256430104481890355",
+        "name": "entity-projects"
+      },
+      {
+        "id": "1256429786394263572",
+        "name": "creations"
+      },
+      {
+        "id": "1256429823266390138",
+        "name": "block-examples"
+      },
+      {
+        "id": "1256430463443009597",
+        "name": "particle-examples"
+      },
+      {
+        "id": "1256429864207253576",
+        "name": "block-projects"
+      },
+      {
+        "id": "1256430622340284496",
+        "name": "script-api-functional"
+      },
+      {
+        "id": "1256430061150539857",
+        "name": "entity-examples"
+      },
+      {
+        "id": "1256430144139038720",
+        "name": "item-example"
+      },
+      {
+        "id": "1256429989834788958",
+        "name": "command-examples"
+      },
+      {
+        "id": "1256430493038153778",
+        "name": "particle-projects"
+      },
+      {
+        "id": "1256430538206740572",
+        "name": "script-api-examples"
+      },
+      {
+        "id": "1256430304273633330",
+        "name": "misc-projects"
+      },
+      {
+        "id": "1256430804003848303",
+        "name": "sound_effects"
+      },
+      {
+        "id": "1256430238833840158",
+        "name": "misc-examples"
+      }
+    ],
+    "createdAt": "2024-06-29T02:01:56.361Z",
+    "enabled": true
+  },
+  {
+    "name": "ForestJS",
+    "authorId": "1261858363847872512",
+    "categoryId": "1256261907904462888",
+    "forumChannelId": "1256354235033976872",
+    "workingNotesChannelId": null,
+    "channels": [
+      {
+        "id": "1256263446396272661",
+        "name": "script-api-examples"
+      },
+      {
+        "id": "1256263593997897788",
+        "name": "script-api-functional"
+      },
+      {
+        "id": "1256449611036364810",
+        "name": "json-ui-examples"
+      },
+      {
+        "id": "1256262251380473877",
+        "name": "creations"
+      },
+      {
+        "id": "1352409937241837629",
+        "name": "js-examples"
+      }
+    ],
+    "createdAt": "2024-06-28T14:56:19.062Z",
+    "enabled": true
+  },
+  {
+    "name": "Gamer99",
+    "authorId": "687350854013157386",
+    "categoryId": "1107480481458565140",
+    "forumChannelId": "1107823033198067742",
+    "workingNotesChannelId": "1107585786813091840",
+    "channels": [
+      {
+        "id": "1107526510144925768",
+        "name": "block-projects"
+      },
+      {
+        "id": "1163053824601243778",
+        "name": "sound_effects"
+      },
+      {
+        "id": "1107527460083466361",
+        "name": "entity-examples"
+      },
+      {
+        "id": "1107527519852306502",
+        "name": "particles-examples"
+      },
+      {
+        "id": "1107527563343044658",
+        "name": "misc-projects"
+      },
+      {
+        "id": "1107526444839608340",
+        "name": "creations"
+      },
+      {
+        "id": "1107830352526970971",
+        "name": "command-projects"
+      },
+      {
+        "id": "1163053842116644914",
+        "name": "music-assets"
+      },
+      {
+        "id": "1107830301465522269",
+        "name": "command-examples"
+      },
+      {
+        "id": "1107435268203626646",
+        "name": "blog"
+      },
+      {
+        "id": "1110272442322145342",
+        "name": "block-examples"
+      },
+      {
+        "id": "1107526538620047410",
+        "name": "item-examples"
+      },
+      {
+        "id": "1107527530681991258",
+        "name": "particle-projects"
+      },
+      {
+        "id": "1107527553478045738",
+        "name": "misc-examples"
+      },
+      {
+        "id": "1107527506736709732",
+        "name": "entity-projects"
+      },
+      {
+        "id": "1107526552872308756",
+        "name": "item-projects"
+      },
+      {
+        "id": "1107527543264919552",
+        "name": "script-api-examples"
+      },
+      {
+        "id": "1163053759123968030",
+        "name": "script-api-functional"
+      }
+    ],
+    "createdAt": "2023-05-15T01:32:02.772Z",
+    "enabled": true
+  },
+  {
+    "name": "AgentT",
+    "authorId": "795829314590867458",
+    "categoryId": "1162853749727973416",
+    "forumChannelId": "1162853852412919958",
+    "workingNotesChannelId": "1162855309690294422",
+    "channels": [
+      {
+        "id": "1162854296556163192",
+        "name": "block-examples"
+      },
+      {
+        "id": "1162854898728181820",
+        "name": "script-api-examples"
+      },
+      {
+        "id": "1162854455465750538",
+        "name": "item-projects"
+      },
+      {
+        "id": "1162854637515321496",
+        "name": "particles-examples"
+      },
+      {
+        "id": "1162854161222733944",
+        "name": "blog"
+      },
+      {
+        "id": "1162854347827323021",
+        "name": "block-projects"
+      },
+      {
+        "id": "1162854577754873896",
+        "name": "entity-projects"
+      },
+      {
+        "id": "1162854218982494259",
+        "name": "creations"
+      },
+      {
+        "id": "1162855142455005214",
+        "name": "sound_effects"
+      },
+      {
+        "id": "1162854657668960266",
+        "name": "particle-projects"
+      },
+      {
+        "id": "1162854514387320982",
+        "name": "entity-examples"
+      },
+      {
+        "id": "1162854763923251240",
+        "name": "command-projects"
+      },
+      {
+        "id": "1162855049899298938",
+        "name": "misc-examples"
+      },
+      {
+        "id": "1162855061974695966",
+        "name": "misc-projects"
+      },
+      {
+        "id": "1162854750514061342",
+        "name": "command-example"
+      },
+      {
+        "id": "1162854398867812562",
+        "name": "item-examples"
+      },
+      {
+        "id": "1162854925693370490",
+        "name": "script-api-projects"
+      },
+      {
+        "id": "1162854911894110318",
+        "name": "script-api-functional"
+      },
+      {
+        "id": "1162855156535271494",
+        "name": "music-assets"
+      }
+    ],
+    "createdAt": "2023-10-14T20:45:38.713Z",
+    "enabled": true
+  },
+  {
+    "name": "Catastrophy",
+    "authorId": "460209002052190210",
+    "categoryId": "1122376460146049064",
+    "forumChannelId": "1122376559957901332",
+    "workingNotesChannelId": "1122378146709258271",
+    "channels": [
+      {
+        "id": "1122377587918917695",
+        "name": "item-examples"
+      },
+      {
+        "id": "1122377749626105907",
+        "name": "entity-projects"
+      },
+      {
+        "id": "1122377802390454312",
+        "name": "particles-examples"
+      },
+      {
+        "id": "1122377625923485727",
+        "name": "item-projects"
+      },
+      {
+        "id": "1163054605094109205",
+        "name": "sound_effects"
+      },
+      {
+        "id": "1122378106536218664",
+        "name": "misc-projects"
+      },
+      {
+        "id": "1122377843859529778",
+        "name": "particle-projects"
+      },
+      {
+        "id": "1122377492095840278",
+        "name": "block-examples"
+      },
+      {
+        "id": "1122378016320917596",
+        "name": "script-api-functional"
+      },
+      {
+        "id": "1122387150722314260",
+        "name": "script-api-projects"
+      },
+      {
+        "id": "1122377966140264518",
+        "name": "script-api-examples"
+      },
+      {
+        "id": "1122377680839524462",
+        "name": "entity-examples"
+      },
+      {
+        "id": "1122377886515597412",
+        "name": "command-example"
+      },
+      {
+        "id": "1122378067009085520",
+        "name": "misc-examples"
+      },
+      {
+        "id": "1166430546063282176",
+        "name": "creations"
+      },
+      {
+        "id": "1122377537490784296",
+        "name": "block-projects"
+      },
+      {
+        "id": "1122377326798319727",
+        "name": "blog"
+      },
+      {
+        "id": "1163054529844105326",
+        "name": "music-assets"
+      },
+      {
+        "id": "1122377925132562492",
+        "name": "command-projects"
+      }
+    ],
+    "createdAt": "2023-06-25T04:03:20.845Z",
+    "enabled": true
+  },
+  {
+    "name": "Dead",
+    "authorId": "609579584987594754",
+    "categoryId": "1166430244497002599",
+    "forumChannelId": "1195802173955649566",
+    "workingNotesChannelId": "1195798451242406008",
+    "channels": [
+      {
+        "id": "1195800448242815047",
+        "name": "blog"
+      },
+      {
+        "id": "1122377435304955924",
+        "name": "creations"
+      },
+      {
+        "id": "1195799698016051351",
+        "name": "sound_effects"
+      },
+      {
+        "id": "1195799875401552074",
+        "name": "script-api-examples"
+      },
+      {
+        "id": "1195800148123598951",
+        "name": "item-examples"
+      }
+    ],
+    "createdAt": "2023-10-24T17:37:21.514Z",
+    "enabled": true
+  },
+  {
+    "name": "Gamerelk",
+    "authorId": "823730577320312862",
+    "categoryId": "1107456333281763380",
+    "forumChannelId": "1107817070177046568",
+    "workingNotesChannelId": "1107586217018654750",
+    "channels": [
+      {
+        "id": "1249926407908495381",
+        "name": "custom-components-examples"
+      },
+      {
+        "id": "1107427048479260772",
+        "name": "blog"
+      },
+      {
+        "id": "1107829811088466051",
+        "name": "command-example"
+      },
+      {
+        "id": "1107478953612017704",
+        "name": "particle-projects"
+      },
+      {
+        "id": "1249926403928096872",
+        "name": "custom-components-examples"
+      },
+      {
+        "id": "1107481516424044554",
+        "name": "creations"
+      },
+      {
+        "id": "1107830221459165274",
+        "name": "command-projects"
+      },
+      {
+        "id": "1109739709665660979",
+        "name": "script-api-examples"
+      },
+      {
+        "id": "1130281295319142451",
+        "name": "sound_effects"
+      },
+      {
+        "id": "1107478379940298842",
+        "name": "entity-examples"
+      },
+      {
+        "id": "1107478924033794138",
+        "name": "particles-examples"
+      },
+      {
+        "id": "1114737353559392286",
+        "name": "script-api-projects"
+      },
+      {
+        "id": "1107478543719481365",
+        "name": "entity-projects"
+      },
+      {
+        "id": "1130281498600280146",
+        "name": "music-assets"
+      },
+      {
+        "id": "1107461923957653684",
+        "name": "item-projects"
+      },
+      {
+        "id": "1107461841510223933",
+        "name": "item-examples"
+      },
+      {
+        "id": "1107457412207751188",
+        "name": "block-projects"
+      },
+      {
+        "id": "1107462008879722576",
+        "name": "misc-projects"
+      },
+      {
+        "id": "1107462150118711377",
+        "name": "misc-examples"
+      },
+      {
+        "id": "1107457103171440650",
+        "name": "block-examples"
+      },
+      {
+        "id": "1107473789274554439",
+        "name": "script-api-functional"
+      }
+    ],
+    "createdAt": "2023-05-14T23:56:05.398Z",
+    "enabled": true
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "name": "minecraft-bedrock-discord-bot",
+  "version": "1.0.0",
+  "description": "Discord bot for Minecraft Bedrock coding community with debugging and archive management",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "deploy": "node src/deploy-commands.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "minecraft",
+    "bedrock",
+    "javascript",
+    "debugging",
+    "archive"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "@discordjs/rest": "^2.2.0",
+    "discord-api-types": "^0.37.61",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
