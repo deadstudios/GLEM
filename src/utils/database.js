@@ -106,12 +106,10 @@ async function getArchiveStats(authorId) {
         disabledArchives: userArchives.filter(a => a.enabled === false).length
     };
     
-    // Calculate total examples (assuming each channel can have multiple examples)
     userArchives.forEach(archive => {
         if (archive.channels) {
             stats.totalExamples += archive.channels.length;
             
-            // Extract categories from channel names
             archive.channels.forEach(channel => {
                 const categoryMatch = channel.name.match(/^(\w+)-/);
                 if (categoryMatch) {
@@ -124,7 +122,6 @@ async function getArchiveStats(authorId) {
         }
     });
     
-    // Sort archives by creation date for recent activity
     const sortedArchives = userArchives
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 5);
@@ -141,6 +138,12 @@ async function getArchiveStats(authorId) {
 // Get all archives (for admin purposes)
 async function getAllArchives() {
     return await loadArchives();
+}
+
+// Get all archive names (for autocomplete)
+async function getAllArchiveNames() {
+    const archives = await loadArchives();
+    return archives.map(archive => archive.name);
 }
 
 // Search archives
@@ -183,6 +186,58 @@ async function updateArchiveChannels(archiveName, channels) {
     return null;
 }
 
+// Debug function to trace data loading and processing
+async function debugLoadAndGetNames() {
+    console.log('--- [DATABASE DEBUG START] ---');
+    let rawData;
+    try {
+        await ensureDataDir();
+        console.log('[DEBUG] Reading file from path:', ARCHIVES_FILE);
+        rawData = await fs.readFile(ARCHIVES_FILE, 'utf8');
+        console.log('[DEBUG] Raw file content successfully read.');
+    } catch (error) {
+        console.error('[DEBUG] FATAL: Could not read the archives.json file.', error);
+        if (error.code === 'ENOENT') {
+            console.error('[DEBUG] DIAGNOSIS: The file does not exist. A new empty one will be created on next save.');
+        }
+        console.log('--- [DATABASE DEBUG END] ---');
+        return { step: 'read-file', success: false, error: error.message };
+    }
+
+    let parsedData;
+    try {
+        console.log('[DEBUG] Attempting to parse raw data as JSON...');
+        parsedData = JSON.parse(rawData);
+        console.log('[DEBUG] JSON parsed successfully.');
+    } catch (error) {
+        console.error('[DEBUG] FATAL: Could not parse the file content as JSON.', error);
+        console.error('[DEBUG] DIAGNOSIS: The archives.json file is corrupted or not valid JSON.');
+        console.log('--- [DATABASE DEBUG END] ---');
+        return { step: 'parse-json', success: false, error: error.message, rawData };
+    }
+
+    if (!Array.isArray(parsedData)) {
+        const type = typeof parsedData;
+        console.error(`[DEBUG] FATAL: Parsed data is not an array. It is of type: ${type}.`);
+        console.error('[DEBUG] DIAGNOSIS: The root of your JSON file must be an array (e.g., `[]`), not an object or other value.');
+        console.log('--- [DATABASE DEBUG END] ---');
+        return { step: 'validate-array', success: false, error: `Parsed data is not an array, but a ${type}.` };
+    }
+
+    try {
+        console.log('[DEBUG] Attempting to map archive names from the array...');
+        const names = parsedData.map(archive => archive.name);
+        console.log('[DEBUG] Successfully mapped names:', names);
+        console.log('--- [DATABASE DEBUG END] ---');
+        return { step: 'map-names', success: true, names };
+    } catch (error) {
+        console.error('[DEBUG] FATAL: Could not map names from the array.', error);
+        console.error('[DEBUG] DIAGNOSIS: One or more objects in your archives.json array is missing the `name` property.');
+        console.log('--- [DATABASE DEBUG END] ---');
+        return { step: 'map-names', success: false, error: error.message, parsedData };
+    }
+}
+
 module.exports = {
     saveArchiveData,
     getArchiveData,
@@ -190,7 +245,9 @@ module.exports = {
     updateArchiveStatus,
     getArchiveStats,
     getAllArchives,
+    getAllArchiveNames,
     searchArchives,
     getArchiveByChannelId,
-    updateArchiveChannels
+    updateArchiveChannels,
+    debugLoadAndGetNames // Added the debug function to exports
 };
