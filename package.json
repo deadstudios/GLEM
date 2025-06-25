@@ -23,9 +23,12 @@
     "@discordjs/rest": "^2.2.0",
     "acorn": "^8.14.1",
     "acorn-walk": "^8.3.4",
+    "adm-zip": "^0.5.16",
     "discord-api-types": "^0.37.61",
     "discord.js": "^14.14.1",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "javascript-obfuscator": "^4.1.1",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

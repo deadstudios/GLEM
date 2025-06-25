@@ -1,9 +1,5 @@
-const { ContextMenuCommandBuilder, ApplicationCommandType, EmbedBuilder } = require('discord.js');
-const { analyzeJavaScript } = require('../utils/codeAnalyzer');
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require('util');
-const readFile = promisify(fs.readFile);
+const { ContextMenuCommandBuilder, ApplicationCommandType, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, AttachmentBuilder } = require('discord.js');
+const { analyzeJavaScript, addSemicolons, modernizeScript } = require('../utils/codeAnalyzer');
 
 module.exports = {
     data: new ContextMenuCommandBuilder()
@@ -14,154 +10,40 @@ module.exports = {
         const message = interaction.targetMessage;
         
         try {
+            let code = '';
             // Check for attachments first
             if (message.attachments.size > 0) {
-                await handleAttachments(interaction, message);
-                return;
+                const jsFile = message.attachments.find(att => att.name.endsWith('.js'));
+                if (!jsFile) {
+                     return await interaction.reply({ content: '❌ No JavaScript file found in attachments!', ephemeral: true });
+                }
+                code = await(await fetch(jsFile.url)).text();
+            } else {
+                 code = extractCodeFromMessage(message.content);
             }
             
-            // If no attachments, process message content
-            const code = extractCodeFromMessage(message.content);
-            
             if (!code.trim()) {
-                return await interaction.reply({
-                    content: '❌ No code found in the selected message!',
-                    ephemeral: true
-                });
+                return await interaction.reply({ content: '❌ No code found!', ephemeral: true });
             }
             
             await analyzeAndReply(interaction, code, message);
             
         } catch (error) {
             console.error('Debug analysis error:', error);
-            await interaction.editReply({
-                content: '❌ An error occurred while analyzing the code. Please try again.',
-            });
+            await interaction.reply({ content: '❌ An error occurred while analyzing the code.', ephemeral: true });
         }
     }
 };
 
-async function handleAttachments(interaction, message) {
-    await interaction.deferReply({ ephemeral: true });
-    
-    const jsFiles = message.attachments.filter(att => 
-        att.name.endsWith('.js') || att.contentType === 'application/javascript'
-    );
-    
-    if (jsFiles.size === 0) {
-        return await interaction.editReply({
-            content: '❌ No JavaScript files found in attachments!',
-        });
-    }
-    
-    // Analyze each JS file
-    const results = [];
-    for (const [_, attachment] of jsFiles) {
-        try {
-            const response = await fetch(attachment.url);
-            const code = await response.text();
-            results.push({
-                filename: attachment.name,
-                analysis: analyzeJavaScript(code)
-            });
-        } catch (error) {
-            console.error(`Error analyzing attachment ${attachment.name}:`, error);
-            results.push({
-                filename: attachment.name,
-                error: 'Failed to analyze file'
-            });
-        }
-    }
-    
-    // Create embeds for each analysis
-    const embeds = results.map(result => {
-        const embed = new EmbedBuilder()
-            .setColor('#00D9FF')
-            .setTitle(`🔍 ${result.filename || 'Attachment'} Analysis`)
-            .setDescription(`**Original Message by:** ${message.author.tag}`);
-        
-        if (result.error) {
-            embed.addFields([{
-                name: '❌ Error',
-                value: result.error,
-                inline: false
-            }]);
-            return embed;
-        }
-        
-        const { analysis } = result;
-        
-        if (analysis.errors.length > 0) {
-            embed.addFields([{
-                name: '❌ Syntax Errors',
-                value: analysis.errors.slice(0, 5).map(error => `• ${error}`).join('\n') + 
-                      (analysis.errors.length > 5 ? `\n...and ${analysis.errors.length - 5} more` : ''),
-                inline: false
-            }]);
-        }
-        
-        if (analysis.warnings.length > 0) {
-            embed.addFields([{
-                name: '⚠️ Warnings',
-                value: analysis.warnings.slice(0, 5).map(warning => `• ${warning}`).join('\n') + 
-                      (analysis.warnings.length > 5 ? `\n...and ${analysis.warnings.length - 5} more` : ''),
-                inline: false
-            }]);
-        }
-        
-        if (analysis.suggestions.length > 0) {
-            embed.addFields([{
-                name: '💡 Suggestions',
-                value: analysis.suggestions.slice(0, 5).map(suggestion => `• ${suggestion}`).join('\n') + 
-                      (analysis.suggestions.length > 5 ? `\n...and ${analysis.suggestions.length - 5} more` : ''),
-                inline: false
-            }]);
-        }
-        
-        if (analysis.bedrockSpecific.length > 0) {
-            embed.addFields([{
-                name: '🎮 Bedrock-Specific Notes',
-                value: analysis.bedrockSpecific.slice(0, 5).map(note => `• ${note}`).join('\n') + 
-                      (analysis.bedrockSpecific.length > 5 ? `\n...and ${analysis.bedrockSpecific.length - 5} more` : ''),
-                inline: false
-            }]);
-        }
-        
-        if (analysis.errors.length === 0 && analysis.warnings.length === 0) {
-            embed.addFields([{
-                name: '✅ Analysis Result',
-                value: 'No obvious syntax errors detected! Code appears to be well-formed.',
-                inline: false
-            }]);
-        }
-        
-        return embed;
-    });
-    
-    await interaction.editReply({ embeds });
-}
-
 function extractCodeFromMessage(content) {
-    // Check for code blocks
     const codeBlockRegex = /```(?:javascript|js)?\n?([\s\S]*?)```/gi;
     const codeMatches = content.match(codeBlockRegex);
     
     if (codeMatches) {
-        // Extract code from code blocks
         return codeMatches.map(block => 
             block.replace(/```(?:javascript|js)?\n?/, '').replace(/```$/, '')
         ).join('\n\n');
     }
-    
-    // Check for inline code
-    const inlineCodeRegex = /`([^`]+)`/g;
-    const inlineMatches = content.match(inlineCodeRegex);
-    
-    if (inlineMatches) {
-        return inlineMatches.map(match => match.replace(/`/g, '')).join('\n');
-    }
-    
-    // Use entire message content as potential code
     return content;
 }
 
@@ -169,61 +51,134 @@ async function analyzeAndReply(interaction, code, message) {
     await interaction.deferReply({ ephemeral: true });
     
     const analysis = analyzeJavaScript(code);
+    const embed = createAnalysisEmbed(analysis, message);
     
+    const components = [];
+    const actionRow = new ActionRowBuilder();
+
+    if (analysis.errors.length === 0) {
+        const hasSemicolonWarning = analysis.warnings.some(w => w.includes('semicolon'));
+        const hasModernizeWarning = analysis.warnings.some(w => w.includes('var') || w.includes('==='));
+
+        if (hasSemicolonWarning) {
+            actionRow.addComponents(
+                new ButtonBuilder()
+                    .setCustomId('fix_semicolon')
+                    .setLabel('Add Semicolons')
+                    .setStyle(ButtonStyle.Primary)
+            );
+        }
+        if (hasModernizeWarning) {
+             actionRow.addComponents(
+                new ButtonBuilder()
+                    .setCustomId('fix_modernize')
+                    .setLabel('Modernize Script')
+                    .setStyle(ButtonStyle.Secondary)
+            );
+        }
+    }
+
+    if (actionRow.components.length > 0) {
+        components.push(actionRow);
+    }
+
+    const reply = await interaction.editReply({ embeds: [embed], components });
+
+    if (components.length > 0) {
+        await setupButtonCollector(interaction, reply, code);
+    }
+}
+
+async function setupButtonCollector(interaction, reply, originalCode) {
+    const collector = reply.createMessageComponentCollector({
+        filter: (i) => i.user.id === interaction.user.id,
+        time: 60000 // 60 seconds
+    });
+
+    collector.on('collect', async (buttonInteraction) => {
+        let fixedCode;
+        let replyMessage;
+
+        switch (buttonInteraction.customId) {
+            case 'fix_semicolon':
+                fixedCode = addSemicolons(originalCode);
+                replyMessage = "✨ Here is the code with semicolons added:";
+                break;
+            case 'fix_modernize':
+                fixedCode = modernizeScript(originalCode);
+                replyMessage = "✨ Here is the modernized script (`var` -> `let`, `==` -> `===`):";
+                break;
+            default:
+                return buttonInteraction.reply({ content: "Unknown action!", ephemeral: true });
+        }
+
+        const DESCRIPTION_LIMIT = 4000;
+
+        if (fixedCode.length <= DESCRIPTION_LIMIT) {
+            // If code is short enough, send in an embed
+            await buttonInteraction.reply({
+                content: replyMessage,
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor('#2ECC71')
+                        .setDescription(`\`\`\`javascript\n${fixedCode}\`\`\``)
+                ],
+                ephemeral: true
+            });
+        } else {
+            // If code is too long, send as a file
+            const buffer = Buffer.from(fixedCode, 'utf-8');
+            const attachment = new AttachmentBuilder(buffer, { name: 'fixed_script.js' });
+
+            await buttonInteraction.reply({
+                content: replyMessage + "\nThe corrected code was too long to display, so it's attached as a file.",
+                files: [attachment],
+                ephemeral: true
+            });
+        }
+
+        const disabledRow = ActionRowBuilder.from(reply.components[0]);
+        disabledRow.components.forEach(c => c.setDisabled(true));
+        await interaction.editReply({ components: [disabledRow] });
+        collector.stop();
+    });
+
+    collector.on('end', (collected, reason) => {
+        if (reason === 'time' && reply.components.length > 0) {
+            const disabledRow = ActionRowBuilder.from(reply.components[0]);
+            disabledRow.components.forEach(c => c.setDisabled(true));
+            interaction.editReply({ components: [disabledRow] }).catch(() => {});
+        }
+    });
+}
+
+function createAnalysisEmbed(analysis, message) {
     const embed = new EmbedBuilder()
         .setColor('#00D9FF')
-        .setTitle('🔍 Code Debug Analysis')
+        .setTitle(`🔍 Code Debug Analysis`)
         .setDescription(`**Original Message by:** ${message.author.tag}`)
-        .addFields([{
-            name: '📝 Code Preview',
-            value: `\`\`\`javascript\n${code.length > 500 ? code.substring(0, 500) + '...' : code}\`\`\``,
-            inline: false
-        }])
         .setTimestamp();
-    
+
     if (analysis.errors.length > 0) {
-        embed.addFields([{
+        embed.setColor('#E74C3C').addFields([{
             name: '❌ Syntax Errors',
-            value: analysis.errors.slice(0, 5).map(error => `• ${error}`).join('\n') + 
-                  (analysis.errors.length > 5 ? `\n...and ${analysis.errors.length - 5} more` : ''),
-            inline: false
+            value: analysis.errors.slice(0, 5).map(e => `• ${e}`).join('\n')
         }]);
     }
     
     if (analysis.warnings.length > 0) {
-        embed.addFields([{
+        embed.setColor('#F1C40F').addFields([{
             name: '⚠️ Warnings',
-            value: analysis.warnings.slice(0, 5).map(warning => `• ${warning}`).join('\n') + 
-                  (analysis.warnings.length > 5 ? `\n...and ${analysis.warnings.length - 5} more` : ''),
-            inline: false
-        }]);
-    }
-    
-    if (analysis.suggestions.length > 0) {
-        embed.addFields([{
-            name: '💡 Suggestions',
-            value: analysis.suggestions.slice(0, 5).map(suggestion => `• ${suggestion}`).join('\n') + 
-                  (analysis.suggestions.length > 5 ? `\n...and ${analysis.suggestions.length - 5} more` : ''),
-            inline: false
-        }]);
-    }
-    
-    if (analysis.bedrockSpecific.length > 0) {
-        embed.addFields([{
-            name: '🎮 Bedrock-Specific Notes',
-            value: analysis.bedrockSpecific.slice(0, 5).map(note => `• ${note}`).join('\n') + 
-                  (analysis.bedrockSpecific.length > 5 ? `\n...and ${analysis.bedrockSpecific.length - 5} more` : ''),
-            inline: false
+            value: analysis.warnings.slice(0, 5).map(w => `• ${w}`).join('\n')
         }]);
     }
     
     if (analysis.errors.length === 0 && analysis.warnings.length === 0) {
-        embed.addFields([{
+        embed.setColor('#2ECC71').addFields([{
             name: '✅ Analysis Result',
-            value: 'No obvious syntax errors detected! Code appears to be well-formed.',
-            inline: false
+            value: 'No obvious errors or warnings detected!'
         }]);
     }
     
-    await interaction.editReply({ embeds: [embed] });
+    return embed;
 }
